@@ -10,26 +10,14 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Clean Light Theme Styling for Maximum Readability
+# 2. Clean Light Theme Styling
 st.markdown("""
 <style>
-/* Light, clean background */
 .stApp {
     background-color: #f4f6f9;
     color: #111827;
 }
 
-/* White card containers for content */
-.card-container {
-    background-color: #ffffff;
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e5e7eb;
-    margin-bottom: 20px;
-}
-
-/* Bold section title styling */
 .header-tag {
     color: #2563eb;
     font-weight: 700;
@@ -76,7 +64,7 @@ if st.session_state.page == 'welcome':
         st.rerun()
 
 
-# --- PAGE 2: INPUT FORM SCREEN ---
+# --- PAGE 2: INPUT FORM SCREEN (FULL-WIDTH BROAD FIELDS) ---
 elif st.session_state.page == 'input':
     st.markdown('<p class="header-tag">🤖 AI MODEL DEVELOPED BY JAIDEV AND ANMOL</p>', unsafe_allow_html=True)
     
@@ -88,19 +76,15 @@ elif st.session_state.page == 'input':
     st.write("Fill in all patient parameters below to run the AI prediction.")
     st.markdown("---")
     
-    col1, col2 = st.columns(2)
-
-    with col1:
-        pregnancies = st.number_input("Pregnancies", min_value=0, max_value=20, value=0)
-        glucose = st.number_input("Glucose Level (mg/dL)", min_value=0, max_value=300, value=120)
-        blood_pressure = st.number_input("Blood Pressure (mm Hg)", min_value=0, max_value=150, value=70)
-        skin_thickness = st.number_input("Skin Thickness (mm)", min_value=0, max_value=100, value=20)
-
-    with col2:
-        insulin = st.number_input("Insulin Level (mu U/ml)", min_value=0, max_value=900, value=80)
-        bmi = st.number_input("BMI Value", min_value=0.0, max_value=70.0, value=25.00, format="%.2f")
-        dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, max_value=3.0, value=0.500, format="%.3f")
-        age = st.number_input("Age (Years)", min_value=1, max_value=120, value=30)
+    # All fields listed sequentially to make each input box full-width across the page
+    pregnancies = st.number_input("Pregnancies", min_value=0, max_value=20, value=0)
+    glucose = st.number_input("Glucose Level (mg/dL)", min_value=0, max_value=300, value=120)
+    blood_pressure = st.number_input("Blood Pressure (mm Hg)", min_value=0, max_value=150, value=70)
+    skin_thickness = st.number_input("Skin Thickness (mm)", min_value=0, max_value=100, value=20)
+    insulin = st.number_input("Insulin Level (mu U/ml)", min_value=0, max_value=900, value=80)
+    bmi = st.number_input("BMI Value", min_value=0.0, max_value=70.0, value=25.00, format="%.2f")
+    dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, max_value=3.0, value=0.500, format="%.3f")
+    age = st.number_input("Age (Years)", min_value=1, max_value=120, value=30)
 
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("🔍 Run Prediction Model", use_container_width=True, type="primary"):
@@ -123,11 +107,9 @@ elif st.session_state.page == 'results':
     st.markdown('<p class="header-tag">🤖 AI MODEL DEVELOPED BY JAIDEV AND ANMOL</p>', unsafe_allow_html=True)
     st.title("📊 Diagnostic Assessment")
     
-    # Loading animation delay
     with st.spinner("⏳ Analyzing patient data and calculating risk model... Please wait..."):
         time.sleep(3)
     
-    # Run prediction
     data = st.session_state.user_data
     input_list = [[
         data['Pregnancies'], data['Glucose'], data['BloodPressure'],
