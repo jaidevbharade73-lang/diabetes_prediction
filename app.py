@@ -6,6 +6,7 @@ import joblib
 model = joblib.load('diabetes_model.pkl')
 
 st.set_page_config(page_title="Diabetes Risk Predictor", page_icon="🩺", layout="centered")
+st.caption("AI MODEL DEVELOPED BY JAIDEV AND ANMOL")
 
 st.title("🩺 Diabetes Prediction Web Application")
 st.write("Enter patient medical parameters below to check for diabetes risk.")
