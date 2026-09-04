@@ -3,93 +3,44 @@ import pandas as pd
 import time
 from sklearn.ensemble import RandomForestClassifier
 
-# Page Configuration
+# 1. Page Configuration
 st.set_page_config(
     page_title="Diabetes AI Predictor | Jaidev & Anmol",
     page_icon="🩺",
     layout="centered"
 )
 
-# High-Contrast Light Medical Theme CSS
+# 2. Clean Light Theme Styling for Maximum Readability
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-html, body, [class*="css"] {
-    font-family: 'Poppins', sans-serif;
-}
-
-/* Light Gradient Background for Maximum Readability */
+/* Light, clean background */
 .stApp {
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    color: #0f172a;
+    background-color: #f4f6f9;
+    color: #111827;
 }
 
-/* Card Boxes */
-.card-box {
-    background: #ffffff;
+/* White card containers for content */
+.card-container {
+    background-color: #ffffff;
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
     margin-bottom: 20px;
 }
 
-/* Super Clear Dark Labels for Inputs */
-label, .stMarkdown, p {
-    color: #0f172a !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-}
-
-/* Headings */
-.main-title {
-    font-size: 2.2rem;
+/* Bold section title styling */
+.header-tag {
+    color: #2563eb;
     font-weight: 700;
-    color: #0284c7;
-    text-align: center;
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #334155 !important;
-    font-weight: 400 !important;
-    margin-bottom: 20px;
-}
-
-.author-tag {
-    background: #0284c7;
-    color: white !important;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 15px;
-}
-
-/* Button Styling */
-div.stButton > button {
-    background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%);
-    color: white !important;
-    border: none;
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 12px;
-    width: 100%;
-    transition: all 0.3s ease;
-}
-
-div.stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(2, 132, 199, 0.4);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Train the Model
+# 3. Train Model
 @st.cache_data
 def load_and_train():
     url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
@@ -105,10 +56,103 @@ def load_and_train():
 
 model = load_and_train()
 
-# Page Navigation State
+# 4. Session State Management
 if 'page' not in st.session_state:
     st.session_state.page = 'welcome'
+if 'user_data' not in st.session_state:
+    st.session_state.user_data = None
+
 
 # --- PAGE 1: WELCOME SCREEN ---
+if st.session_state.page == 'welcome':
+    st.markdown('<p class="header-tag">🤖 AI MODEL DEVELOPED BY JAIDEV AND ANMOL</p>', unsafe_allow_html=True)
+    st.title("🩺 Diabetes Prediction Web Application")
+    
+    st.info("Welcome! This interactive machine learning tool evaluates clinical patient parameters to predict diabetes risk instantly.")
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("➡️ Click Next to Enter Details", use_container_width=True, type="primary"):
+        st.session_state.page = 'input'
+        st.rerun()
+
+
+# --- PAGE 2: INPUT FORM SCREEN ---
+elif st.session_state.page == 'input':
+    st.markdown('<p class="header-tag">🤖 AI MODEL DEVELOPED BY JAIDEV AND ANMOL</p>', unsafe_allow_html=True)
+    
+    if st.button("⬅️ Back"):
+        st.session_state.page = 'welcome'
+        st.rerun()
+        
+    st.title("📋 Enter Patient Medical Parameters")
+    st.write("Fill in all patient parameters below to run the AI prediction.")
+    st.markdown("---")
+    
+    col1, col2 = st.columns(2)
+
+    with col1:
+        pregnancies = st.number_input("Pregnancies", min_value=0, max_value=20, value=0)
+        glucose = st.number_input("Glucose Level (mg/dL)", min_value=0, max_value=300, value=120)
+        blood_pressure = st.number_input("Blood Pressure (mm Hg)", min_value=0, max_value=150, value=70)
+        skin_thickness = st.number_input("Skin Thickness (mm)", min_value=0, max_value=100, value=20)
+
+    with col2:
+        insulin = st.number_input("Insulin Level (mu U/ml)", min_value=0, max_value=900, value=80)
+        bmi = st.number_input("BMI Value", min_value=0.0, max_value=70.0, value=25.00, format="%.2f")
+        dpf = st.number_input("Diabetes Pedigree Function", min_value=0.0, max_value=3.0, value=0.500, format="%.3f")
+        age = st.number_input("Age (Years)", min_value=1, max_value=120, value=30)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔍 Run Prediction Model", use_container_width=True, type="primary"):
+        st.session_state.user_data = {
+            'Pregnancies': pregnancies,
+            'Glucose': glucose,
+            'BloodPressure': blood_pressure,
+            'SkinThickness': skin_thickness,
+            'Insulin': insulin,
+            'BMI': bmi,
+            'DiabetesPedigreeFunction': dpf,
+            'Age': age
+        }
+        st.session_state.page = 'results'
+        st.rerun()
+
+
+# --- PAGE 3: LOADING & RESULTS SCREEN ---
+elif st.session_state.page == 'results':
+    st.markdown('<p class="header-tag">🤖 AI MODEL DEVELOPED BY JAIDEV AND ANMOL</p>', unsafe_allow_html=True)
+    st.title("📊 Diagnostic Assessment")
+    
+    # Loading animation delay
+    with st.spinner("⏳ Analyzing patient data and calculating risk model... Please wait..."):
+        time.sleep(3)
+    
+    # Run prediction
+    data = st.session_state.user_data
+    input_list = [[
+        data['Pregnancies'], data['Glucose'], data['BloodPressure'],
+        data['SkinThickness'], data['Insulin'], data['BMI'],
+        data['DiabetesPedigreeFunction'], data['Age']
+    ]]
+    
+    prediction = model.predict(input_list)
+    probability = model.predict_proba(input_list)[0][1] * 100
+    
+    st.subheader("Prediction Result")
+    if prediction[0] == 1:
+        st.error(f"⚠️ **Result: High Risk of Diabetes Detected** ({probability:.1f}% risk score)")
+    else:
+        st.success(f"✅ **Result: Low Risk of Diabetes Detected** ({probability:.1f}% risk score)")
+        
+    st.markdown("### Submitted Patient Summary")
+    st.json(data)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔄 Test Another Patient", use_container_width=True):
+        st.session_state.page = 'input'
+        st.rerun()
+    
+
+
 
         
